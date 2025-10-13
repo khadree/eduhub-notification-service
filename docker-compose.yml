@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  notification-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eduhub-notification-service
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      AZURE_COMMUNICATION_CONNECTION_STRING: ${AZURE_COMMUNICATION_CONNECTION_STRING}
+      AZURE_EMAIL_FROM: ${AZURE_EMAIL_FROM}
+      AZURE_SMS_CONNECTION_STRING: ${AZURE_SMS_CONNECTION_STRING}
+      AZURE_SMS_FROM: ${AZURE_SMS_FROM}
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - eduhub-network
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+
+  redis:
+    image: redis:7-alpine
+    container_name: eduhub-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - eduhub-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  eduhub-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
