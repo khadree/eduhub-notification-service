@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest --coverage",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint .",
     "docker:build": "docker build -t eduhub-notification-service .",
     "docker:run": "docker run -p 3000:3000 eduhub-notification-service"
   },
