@@ -13,7 +13,7 @@ jobs:
   pipeline:
     uses: khadree/devops-platform-ci/.github/workflows/ci.yml@main
     with:
-      service-name: kadiri-notification-service # ECR repo name
+      service-name: notification-service # ECR repo name
       language: "javascript"                      # Language for codeql scanning
       trivy-severity: "CRITICAL,HIGH"
     secrets: inherit                         #repo secrets automatically
